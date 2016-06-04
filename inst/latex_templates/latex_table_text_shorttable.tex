@@ -1,0 +1,42 @@
+\begin{table}
+
+\centering
+
+\begin{threeparttable}
+
+\caption{ {{caption}} }
+
+\{{textsize}}
+
+\begin{tabular}
+  {>{\hangindent=1em}L{ {{firstcolwidth}}cm}
+    *{ {{ncol}} }{
+      >{\hangindent=1em}L{ {{colwidth}}cm}
+    }}
+
+  \toprule
+
+  {{{header}}}
+
+  \midrule
+
+  {{{content}}}
+
+  \bottomrule
+  \addlinespace[.75ex]
+\end{tabular}
+
+\label{tab:{{label}} }
+
+\begin{tablenotes}
+\scriptsize
+\item Notes:
+{{{notes}}}
+
+\end{tablenotes}
+
+\end{threeparttable}
+
+\end{table}
+
+

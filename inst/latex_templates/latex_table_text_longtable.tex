@@ -1,0 +1,40 @@
+\begin{ThreePartTable}
+  \tiny
+  \begin{TableNotes}
+  \item[a] Note 1.
+  \end{TableNotes}
+
+  \begin{longtable}
+    {>{\hangindent=1em}L{ {{firstcolwidth}}cm}
+      *{ {{ncol}} }{
+        >{\hangindent=1em}L{ {{colwidth}}cm}
+      }}
+    
+    \caption{ {{caption}} }\label{ tab:{{label}} }\\
+    \toprule[2pt]                   
+
+    {{{header}}}
+
+    \midrule
+    \endfirsthead
+
+    \multicolumn{ {{ncol}} }{l}{\textit{Table \thetable\ continued from previous page}}\\
+    \midrule 
+    
+    {{{header}}}
+
+    \midrule
+    \endhead
+
+    \midrule
+    \multicolumn{ {{ncol}} }{r}{\textit{Table \thetable\ continued on next page}}\\
+    \endfoot
+
+    \bottomrule
+    \insertTableNotes
+    \endlastfoot
+
+    {{{content}}}
+    
+  \end{longtable}
+\end{ThreePartTable}
