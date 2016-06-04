@@ -5,3 +5,6 @@
 **#
 #*
 tests/
+inst/test_output/
+inst/test_tables/
+*.pdf
