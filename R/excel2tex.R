@@ -15,7 +15,14 @@ excel2tex <-
            type = 'longtable' ## c('siunitx','shorttable','longtable')
            ){
 
-    read_excel(file, sheet = sheet, skip=skip, col_names = FALSE) %>>%
+    ## read_excel(file, sheet = sheet, skip=skip, col_names = FALSE) %>>%
+    ##   data.frame ->
+    ##   data
+
+    read.xlsx(file,
+              sheet = sheet,
+              startRow = skip+1,
+              colNames = FALSE) ->
       data.frame ->
       data
 
@@ -41,10 +48,12 @@ excel2tex <-
           data[r,] %>>%
             sapply(function(c){
               c[is.na(c)] <- ""
-              c %>>%
-                sprintf(
-                  fmt = "\\multicolumn{1}{c}{%s}"
-                )
+              sprintf(
+                fmt = "\\multicolumn{1}{C{%s cm}}{%s}",
+                ## fmt = "\\multicolumn{1}{c}{%s}"
+                colwidth,
+                c
+              )
             }) %>>% as.character ->
             new
 

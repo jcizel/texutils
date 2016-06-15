@@ -1,6 +1,6 @@
 Package: texutils
 Title: What the Package Does (one line, title case)
-Version: 0.0.0.9000
+Version: 1.0.0
 Authors@R: as.person(c("Janko Cizel <jcizel@gmail.com> [aut, cre]"))
 Description: What the package does (one paragraph).
 Depends:
@@ -10,10 +10,11 @@ Imports:
     pipeR,
     rlist,
     dplyr,
-    xtable,
     stringr,
-    htmltools,
-    whisker
+    whisker,
+    ggplot2,
+    ggthemes,
+    openxlsx
 License: What license is it under?
 LazyData: true
 RoxygenNote: 5.0.1
