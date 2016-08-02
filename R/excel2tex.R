@@ -5,8 +5,6 @@ excel2tex <-
            sheet = 1,
            skip = 0,
            colwidths = 1.2,
-           ## firstcolwidth = 2,
-           ## colwidth = 1.2,
            escaperows = NULL,
            escapecols = NULL,
            caption = '',
@@ -15,10 +13,6 @@ excel2tex <-
            notes = '',
            type = 'longtable' ## c('siunitx','shorttable','longtable')
            ){
-
-    ## read_excel(file, sheet = sheet, skip=skip, col_names = FALSE) %>>%
-    ##   data.frame ->
-    ##   data
 
     read.xlsx(file,
               sheet = sheet,
@@ -29,7 +23,7 @@ excel2tex <-
 
     if (length(colwidths) == 1){
       colwidths2 = sprintf(
-        "*{ %s }>{\\hangindent=1em}L{ %s cm}",
+        "*{ %s }{>{\\hangindent=1em}L{ %s cm}}",
         data %>>% NCOL,
         colwidths
       )
@@ -52,28 +46,31 @@ excel2tex <-
     if (!is.null(escaperows)){
       for (r in escaperows){
         if (type == 'number'){
-          data[r,] %>>%
-            sapply(function(c){
-              c[is.na(c)] <- ""
+          mapply(
+            data[r,],
+            colwidths,
+            FUN = function(x,y){
+              x[is.na(x)] <- ""
               sprintf(
                 fmt = "\\multicolumn{1}{C{%s cm}}{%s}",
                 ## fmt = "{\\shortstack{%s}}"
-                colwidths,
-                c
+                y,
+                x
               )
             }) %>>% as.character ->
             new
 
           data[r,] <- new
         } else {
-          data[r,] %>>%
-            sapply(function(c){
-              c[is.na(c)] <- ""
+          mapply(
+            data[r,],
+            colwidths,
+            FUN = function(x,y){
+              x[is.na(x)] <- ""
               sprintf(
                 fmt = "\\multicolumn{1}{C{%s cm}}{%s}",
-                ## fmt = "\\multicolumn{1}{c}{%s}"
-                colwidths,
-                c
+                y,
+                x
               )
             }) %>>% as.character ->
             new
@@ -135,8 +132,8 @@ excel2tex <-
         colwidths = colwidths2,
         header = CONTENT[1L] %>>% paste(collapse = "\n"),
         content = CONTENT[-1L] %>>% paste(collapse = "\n"),
-        firstcolwidth = firstcolwidth,
-        colwidth = colwidth,
+        ## firstcolwidth = firstcolwidth,
+        ## colwidth = colwidth,
         ncol = par.ncol,
         label = label,
         notes = notes
@@ -150,8 +147,8 @@ excel2tex <-
         colwidths = colwidths2,
         header = CONTENT[1L] %>>% paste(collapse = "\n"),
         content = CONTENT[-1L] %>>% paste(collapse = "\n"),
-        firstcolwidth = firstcolwidth,
-        colwidth = colwidth,
+        ## firstcolwidth = firstcolwidth,
+        ## colwidth = colwidth,
         ncol = par.ncol,
         label = label,
         notes = notes
@@ -165,8 +162,8 @@ excel2tex <-
         colwidths = colwidths2,
         header = CONTENT[1L] %>>% paste(collapse = "\n"),
         content = CONTENT[-1L] %>>% paste(collapse = "\n"),
-        firstcolwidth = firstcolwidth,
-        colwidth = colwidth,
+        ## firstcolwidth = firstcolwidth,
+        ## colwidth = colwidth,
         ncol = par.ncol,
         label = label,
         notes = notes
