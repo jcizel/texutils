@@ -1,5 +1,11 @@
 ##' @export
-excel2pdf <- function(outfile,...){
+excel2pdf <- function(outfile, landscape = TRUE,...){
+  if (landscape == TRUE){
+    preamble = '\\documentclass[12pt,a4paper,landscape]{article}'
+  } else {
+    preamble = '\\documentclass[12pt,a4paper]{article}'
+  }
+
   DIR.DATA <- "/Users/jankocizel/Documents/Dropbox/Projects/PhD Thesis/R/PACKAGES/texutils/inst/test_output"
 
   template <- readLines(system.file('./latex_templates/latex_article.tex',package = 'texutils'))
@@ -8,6 +14,7 @@ excel2pdf <- function(outfile,...){
     out
 
   list(
+    preamble = preamble,
     content = out
   ) ->
     info

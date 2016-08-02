@@ -1,5 +1,5 @@
 ##' @export
-df2pdf <- function(df,outfile,...){
+df2pdf <- function(df,outfile,landscape = TRUE,...){
   tempfile(fileext = '.xlsx') ->
     temp
 
@@ -16,6 +16,7 @@ df2pdf <- function(df,outfile,...){
 
   excel2pdf(file = temp,
             outfile = outfile,
+            landscape = landscape,
             sheet = 'sheet',...) ->
     out
 

@@ -6,13 +6,14 @@ sparkfigures <-function(data,
                         dir.output = NULL,
                         dir.figs = NULL,
                         plotname = '',
-                        plotterfun = NULL){
-
-  dir.root <- '/Users/jankocizel/Documents/Dropbox/Projects/PhD Thesis/R/PACKAGES/Projects2016.Macropru/'
+                        plotterfun = NULL,
+                        fig.height = 5,
+                        fig.width = 10){
 
   if (is.null(dir.output)){
-     dir.output <- file.path(dir.root,'inst/output',Sys.Date())
-     dir.create(dir.output)
+    dir.root <- '/Users/jankocizel/Documents/Dropbox/Projects/PhD Thesis/R/PACKAGES/texutils/'
+    dir.output <- file.path(dir.root,'inst/output',Sys.Date())
+    dir.create(dir.output)
   }
 
   dir.old = getwd()
@@ -41,22 +42,7 @@ sparkfigures <-function(data,
   ## PLOTTING FUNCTION                                                        ##
   ## ------------------------------------------------------------------------ ##
   if (is.null(plotterfun)){
-    plotter <- function(dt2plot){
-      dt2plot %>>%
-        ggplot(
-          aes(
-            x = x,
-            y = y
-          )
-        ) +
-        geom_line(size=0.3) +
-        ggthemes::theme_tufte(base_size = 15, base_family = "Helvetica") +
-        theme(axis.title = element_blank(), axis.text.y = element_blank(),
-              axis.text.x = element_blank(),
-              axis.ticks = element_blank(), strip.text = element_blank()) ->
-        p
-      return(p)
-    }
+    plotter <- .plotter
   } else {
     plotter <- plotterfun
   }
@@ -75,10 +61,10 @@ sparkfigures <-function(data,
       } else {
         figpath = file.path('.',
                             basename(dir.figs),
-                            sprintf("spark_%s_%s",plotname,id) %>>%
+                            sprintf("spark_%s_%s_%s_%s",plotname,id,xcol,ycol) %>>%
                               gsub(pattern = "[[:punct:]]",replacement = "") %>>%
                               sprintf(fmt = "%s.pdf"))
-        ggsave(p,filename = figpath,height = 2, width = 10)
+        ggsave(p,filename = figpath,height = fig.height, width = fig.width)
 
 
         data.table(
@@ -96,4 +82,39 @@ sparkfigures <-function(data,
 
   setwd(dir.old)
   return(out)
+}
+
+
+.plotter <- function(data){
+  mins = data %>>% subset(y == min(y, na.rm = TRUE)) %>>%
+    mutate(label = y %>>% formatC(format = 'f', digits = 2))
+  maxs = data %>>% subset(y == max(y, na.rm = TRUE)) %>>%
+    mutate(label = y %>>% formatC(format = 'f', digits = 2))
+  ends = data %>>% subset(!is.na(y)) %>>%
+    subset(x == max(x,na.rm = TRUE)) %>>%
+    mutate(label = y %>>% formatC(format = 'f', digits = 2))
+
+  size.lab = 7
+  data %>>%
+    ggplot(
+      aes(
+        x = x,
+        y = y
+      )
+    ) +
+    geom_line(size=1) +
+    geom_point(data = mins, col = 'red', size = 3) +
+    geom_point(data = maxs, col = 'blue', size = 3) +
+    geom_text(data = mins, aes(label = label), vjust = -1, colour = 'red', size = size.lab) +
+    geom_text(data = maxs, aes(label = label), vjust = +1.5, colour = 'blue', size = size.lab) +
+    geom_text(data = ends, aes(label = label), hjust = 0, nudge_x = 1, size = size.lab) +
+    ggthemes::theme_tufte(base_size = 15, base_family = "Helvetica") +
+    theme(axis.title = element_blank(),
+          axis.text.y = element_blank(),
+          axis.text.x = element_blank(),
+          axis.ticks = element_blank(),
+          strip.text = element_blank()) ->
+    p
+
+  return(p)
 }

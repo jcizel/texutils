@@ -8,3 +8,4 @@ tests/
 inst/test_output/
 inst/test_tables/
 *.pdf
+/inst/latex_templates/auto/latex_article.el
