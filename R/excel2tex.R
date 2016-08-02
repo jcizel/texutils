@@ -4,8 +4,9 @@ excel2tex <-
            outfile,
            sheet = 1,
            skip = 0,
-           firstcolwidth = 2,
-           colwidth = 1.2,
+           colwidths = 1.2,
+           ## firstcolwidth = 2,
+           ## colwidth = 1.2,
            escaperows = NULL,
            escapecols = NULL,
            caption = '',
@@ -26,6 +27,26 @@ excel2tex <-
       data.frame ->
       data
 
+    if (length(colwidths) == 1){
+      colwidths2 = sprintf(
+        "*{ %s }>{\\hangindent=1em}L{ %s cm}",
+        data %>>% NCOL,
+        colwidths
+      )
+
+      colwidths = rep(colwidths,times = NCOL(data))
+    } else {
+      if (length(colwidths) != NCOL(data)){
+        stop("Length of the colwidths vector must be the same as the number of columms in the table.")
+      } else {
+        colwidths2 = sprintf(
+          ">{\\hangindent=1em}L{ %s cm}",
+          colwidths
+        ) %>>%
+          paste(collapse = "\n")
+      }
+    }
+
     par.ncol <- (data %>>% NCOL) - 1
 
     if (!is.null(escaperows)){
@@ -37,7 +58,7 @@ excel2tex <-
               sprintf(
                 fmt = "\\multicolumn{1}{C{%s cm}}{%s}",
                 ## fmt = "{\\shortstack{%s}}"
-                colwidth,
+                colwidths,
                 c
               )
             }) %>>% as.character ->
@@ -51,7 +72,7 @@ excel2tex <-
               sprintf(
                 fmt = "\\multicolumn{1}{C{%s cm}}{%s}",
                 ## fmt = "\\multicolumn{1}{c}{%s}"
-                colwidth,
+                colwidths,
                 c
               )
             }) %>>% as.character ->
@@ -111,6 +132,7 @@ excel2tex <-
       list(
         caption = caption,
         textsize = textsize,
+        colwidths = colwidths2,
         header = CONTENT[1L] %>>% paste(collapse = "\n"),
         content = CONTENT[-1L] %>>% paste(collapse = "\n"),
         firstcolwidth = firstcolwidth,
@@ -125,6 +147,7 @@ excel2tex <-
       list(
         caption = caption,
         textsize = textsize,
+        colwidths = colwidths2,
         header = CONTENT[1L] %>>% paste(collapse = "\n"),
         content = CONTENT[-1L] %>>% paste(collapse = "\n"),
         firstcolwidth = firstcolwidth,
@@ -139,6 +162,7 @@ excel2tex <-
       list(
         caption = caption,
         textsize = textsize,
+        colwidths = colwidths2,
         header = CONTENT[1L] %>>% paste(collapse = "\n"),
         content = CONTENT[-1L] %>>% paste(collapse = "\n"),
         firstcolwidth = firstcolwidth,
