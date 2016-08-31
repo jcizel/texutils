@@ -5,12 +5,13 @@ excel2tex <-
            sheet = 1,
            skip = 0,
            colwidths = 1.2,
+           colorient = 'L',
            escaperows = NULL,
            escapecols = NULL,
            caption = '',
            textsize = 'scriptsize',
            label = 'table',
-           notes = '',
+           notes = '\\item[a] Note 1.',
            type = 'longtable' ## c('siunitx','shorttable','longtable')
            ){
 
@@ -21,20 +22,25 @@ excel2tex <-
       data.frame ->
       data
 
+    if (length(colorient) == 1){
+      colorient = rep(colorient, times = NCOL(data))
+    }
+
     if (length(colwidths) == 1){
       colwidths2 = sprintf(
-        "*{ %s }{>{\\hangindent=1em}L{ %s cm}}",
+        "*{ %s }{>{\\hangindent=1em}%s{ %s cm}}",
         data %>>% NCOL,
+        colorient[1L],
         colwidths
       )
-
       colwidths = rep(colwidths,times = NCOL(data))
     } else {
       if (length(colwidths) != NCOL(data)){
         stop("Length of the colwidths vector must be the same as the number of columms in the table.")
       } else {
         colwidths2 = sprintf(
-          ">{\\hangindent=1em}L{ %s cm}",
+          ">{\\hangindent=1em}%s{ %s cm}",
+          colorient,
           colwidths
         ) %>>%
           paste(collapse = "\n")
